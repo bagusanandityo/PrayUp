@@ -260,6 +260,19 @@ button {
   background: #e5c358;
 }
 
+.btn-test {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-light);
+  width: 100%;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.btn-test:hover {
+  background: var(--glass-highlight);
+}
+
 .btn-back {
   background: transparent;
   border: none;

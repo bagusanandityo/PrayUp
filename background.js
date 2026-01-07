@@ -75,49 +75,55 @@ async function checkPrayerTime() {
 }
 
 
-// Show notification
-// Show notification
+// Show overlay notification in active tab
+let notificationWindowId = null;
+
 async function showNotification(prayerName, soundType) {
-  const notificationId = `prayer-${prayerName}-${Date.now()}`;
-  
-  const options = {
-    type: 'basic',
-    iconUrl: 'assets/icon48.png', // Ensure this exists, or fallback to icon.png
-    title: `Time for ${prayerName}`,
-    message: 'May your prayer be accepted.',
-    contextMessage: 'PrayUp • Prayer Reminder',
-    priority: 2,
-    requireInteraction: true,
-    buttons: [
-      { title: 'Stop Sound' },
-      { title: 'Open Settings' }
-    ]
-  };
-
-  await chrome.notifications.create(notificationId, options);
-
   // Play sound if enabled
   if (soundType && soundType !== 'none') {
-    await playSound(soundType);
+    playSound(soundType);
+  }
+
+  try {
+    // Get active tab
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    
+    if (tab && tab.id && !tab.url.startsWith('chrome://')) {
+      // Send message to content script
+      await chrome.tabs.sendMessage(tab.id, {
+        action: 'showOverlayNotification',
+        prayerName: prayerName
+      });
+    } else {
+      // Fallback: open popup window if no valid tab
+      const window = await chrome.windows.create({
+        url: `notification.html?prayer=${encodeURIComponent(prayerName)}`,
+        type: 'popup',
+        width: 380,
+        height: 340,
+        focused: true
+      });
+      notificationWindowId = window.id;
+    }
+  } catch (error) {
+    console.error('Error showing notification:', error);
+    // Fallback to popup window
+    const window = await chrome.windows.create({
+      url: `notification.html?prayer=${encodeURIComponent(prayerName)}`,
+      type: 'popup',
+      width: 380,
+      height: 340,
+      focused: true
+    });
+    notificationWindowId = window.id;
   }
 }
 
-// Handle Notification Actions (Clicking buttons)
-chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
-  await stopSound(); // Stop sound immediately on any interaction
-  
-  if (buttonIndex === 1) { // Open Settings
-    chrome.action.openPopup();
-  }
-  
-  // Clear notification
-  chrome.notifications.clear(notificationId);
-});
-
-// Handle Notification Close (X button or dismiss)
-chrome.notifications.onClosed.addListener(async (notificationId, byUser) => {
-  if (byUser) {
-    await stopSound();
+// Stop sound when notification window is closed (fallback)
+chrome.windows.onRemoved.addListener((windowId) => {
+  if (windowId === notificationWindowId) {
+    stopSound();
+    notificationWindowId = null;
   }
 });
 
@@ -255,6 +261,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.storage.local.get(['prayerTimes', 'location', 'lastUpdated', 'date'])
       .then(data => sendResponse(data))
       .catch(error => sendResponse({ error: error.message }));
+    return true;
+  }
+
+  if (message.action === 'testNotification') {
+    getSettings().then(settings => {
+      showNotification('Test', settings.soundType);
+    });
+    sendResponse({ success: true });
     return true;
   }
 });

@@ -5,14 +5,24 @@
   "description": "Never miss a prayer.",
   "permissions": [
     "alarms",
-    "notifications",
     "storage",
     "geolocation",
-    "offscreen"
+    "offscreen",
+    "activeTab",
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "https://api.aladhan.com/*",
-    "https://api.bigdatacloud.net/*"
+    "https://api.bigdatacloud.net/*",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
   ],
   "background": {
     "service_worker": "background.js",

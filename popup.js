@@ -274,6 +274,26 @@ function setupEventListeners() {
   document.getElementById('settingsBtn').addEventListener('click', () => showView('settings'));
   document.getElementById('backBtn').addEventListener('click', () => showView('main'));
   document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+  document.getElementById('testNotificationBtn').addEventListener('click', testNotification);
+}
+
+async function testNotification() {
+  const btn = document.getElementById('testNotificationBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Opening...';
+  
+  try {
+    await chrome.runtime.sendMessage({ action: 'testNotification' });
+    btn.textContent = '✓ Opened!';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = '🔔 Test Notification';
+    }, 2000);
+  } catch (error) {
+    console.error('Test notification error:', error);
+    btn.disabled = false;
+    btn.textContent = '🔔 Test Notification';
+  }
 }
 
 function showError(message) {
