@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "PrayUp",
+  "version": "1.0.0",
+  "description": "Never miss a prayer.",
+  "permissions": [
+    "alarms",
+    "notifications",
+    "storage",
+    "geolocation",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "https://api.aladhan.com/*",
+    "https://api.bigdatacloud.net/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    },
+    "default_title": "PrayUp"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}

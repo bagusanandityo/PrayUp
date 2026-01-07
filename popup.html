@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrayUp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="background-decor"></div>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🕌</span>
+        <h1>PrayUp</h1>
+      </div>
+      <button class="btn-icon-only" id="settingsBtn" title="Settings">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </button>
+    </header>
+
+    <!-- Main View: Prayer Times -->
+    <div id="mainView" class="view active">
+      <div class="hero-section">
+        <div class="city" id="cityName">
+          <span class="skeleton-text">Loading location...</span>
+        </div>
+        <div class="date" id="currentDate"></div>
+      </div>
+
+      <div class="prayer-list-container glass-panel">
+        <div class="prayer-list" id="prayerList">
+          <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading prayer times...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-message glass-panel" id="errorMessage" style="display: none;">
+        <span class="error-icon">⚠️</span>
+        <span id="errorText"></span>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="refreshBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          Update Location
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings View -->
+    <div id="settingsView" class="view" style="display: none;">
+      <div class="settings-header">
+        <button class="btn-back" id="backBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back
+        </button>
+        <h2>Settings</h2>
+      </div>
+
+      <div class="setting-group glass-panel">
+        <div class="setting-item">
+          <div class="setting-info">
+            <label>Notifications</label>
+            <span class="setting-desc">Alert at prayer times</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="notificationsEnabled" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-group glass-panel">
+        <label class="setting-label">Calculation Method</label>
+        <div class="select-wrapper">
+          <select id="calculationMethod" class="select-input">
+            <option value="11">Kemenag Indonesia</option>
+            <option value="2">ISNA</option>
+            <option value="4">Umm Al-Qura, Makkah</option>
+            <option value="3">Muslim World League</option>
+            <option value="5">Egyptian General Authority</option>
+          </select>
+          <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="setting-group glass-panel">
+        <label class="setting-label">Notification Sound</label>
+        <div class="select-wrapper">
+          <select id="soundType" class="select-input">
+            <option value="none">No sound</option>
+            <option value="adzan">Adzan</option>
+          </select>
+          <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <button class="btn btn-save" id="saveSettingsBtn">
+        Save Settings
+      </button>
+      
+      <div class="status-message" id="statusMessage"></div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

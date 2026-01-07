@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan - PrayUp</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Pengaturan</h1>
+      <p class="subtitle">PrayUp</p>
+    </header>
+
+    <form id="settingsForm">
+      <div class="setting-group">
+        <div class="setting-item">
+          <div class="setting-info">
+            <label for="notificationsEnabled">Notifikasi</label>
+            <span class="setting-desc">Tampilkan notifikasi saat waktu sholat</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="notificationsEnabled" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h3 class="group-title">Metode Perhitungan</h3>
+        <div class="setting-item">
+          <select id="calculationMethod" class="select-input">
+            <option value="11">Kemenag Indonesia</option>
+            <option value="2">ISNA (Islamic Society of North America)</option>
+            <option value="4">Umm Al-Qura, Makkah</option>
+            <option value="3">Muslim World League</option>
+            <option value="5">Egyptian General Authority</option>
+            <option value="1">University of Islamic Sciences, Karachi</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h3 class="group-title">Suara Notifikasi</h3>
+        <div class="setting-item">
+          <select id="soundType" class="select-input">
+            <option value="none">Tidak ada suara</option>
+            <option value="adzan">Adzan</option>
+          </select>
+        </div>
+        <button type="button" id="testSoundBtn" class="btn btn-secondary">
+          🔊 Test Suara
+        </button>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">
+          💾 Simpan Pengaturan
+        </button>
+      </div>
+
+      <div class="status-message" id="statusMessage"></div>
+    </form>
+
+    <footer class="footer">
+      <p>Versi 1.0.0</p>
+      <p>Data jadwal sholat dari <a href="https://aladhan.com" target="_blank">Aladhan API</a></p>
+    </footer>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
