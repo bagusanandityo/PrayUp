@@ -1,22 +1,24 @@
 // Offscreen document for audio playback
 
-const audioPlayer = document.getElementById('audioPlayer');
+const audioPlayer = document.getElementById("audioPlayer");
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'playSound') {
+  if (message.action === "playSound") {
     playSound(message.soundType);
+  } else if (message.action === "stopSound") {
+    stopSound();
   }
 });
 
 function playSound(soundType) {
-  let soundFile = '';
-  
+  let soundFile = "";
+
   switch (soundType) {
-    case 'beep':
-      soundFile = 'assets/beep.mp3';
+    case "beep":
+      soundFile = "assets/beep.mp3";
       break;
-    case 'adzan':
-      soundFile = 'assets/adzan.mp3';
+    case "adzan":
+      soundFile = "assets/adzan.mp3";
       break;
     default:
       return;
@@ -24,7 +26,12 @@ function playSound(soundType) {
 
   audioPlayer.src = soundFile;
   audioPlayer.volume = 0.7;
-  audioPlayer.play().catch(error => {
-    console.error('Error playing audio:', error);
+  audioPlayer.play().catch((error) => {
+    console.error("Error playing audio:", error);
   });
+}
+
+function stopSound() {
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
 }

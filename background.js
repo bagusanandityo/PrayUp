@@ -76,17 +76,25 @@ async function checkPrayerTime() {
 
 
 // Show notification
+// Show notification
 async function showNotification(prayerName, soundType) {
   const notificationId = `prayer-${prayerName}-${Date.now()}`;
   
-  await chrome.notifications.create(notificationId, {
+  const options = {
     type: 'basic',
-    iconUrl: 'assets/icon.png',
-    title: 'Prayer Time',
-    message: `It's time for ${prayerName} prayer`,
+    iconUrl: 'assets/icon48.png', // Ensure this exists, or fallback to icon.png
+    title: `Time for ${prayerName}`,
+    message: 'May your prayer be accepted.',
+    contextMessage: 'PrayUp • Prayer Reminder',
     priority: 2,
-    requireInteraction: true
-  });
+    requireInteraction: true,
+    buttons: [
+      { title: 'Stop Sound' },
+      { title: 'Open Settings' }
+    ]
+  };
+
+  await chrome.notifications.create(notificationId, options);
 
   // Play sound if enabled
   if (soundType && soundType !== 'none') {
@@ -94,26 +102,60 @@ async function showNotification(prayerName, soundType) {
   }
 }
 
+// Handle Notification Actions (Clicking buttons)
+chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
+  await stopSound(); // Stop sound immediately on any interaction
+  
+  if (buttonIndex === 1) { // Open Settings
+    chrome.action.openPopup();
+  }
+  
+  // Clear notification
+  chrome.notifications.clear(notificationId);
+});
+
+// Handle Notification Close (X button or dismiss)
+chrome.notifications.onClosed.addListener(async (notificationId, byUser) => {
+  if (byUser) {
+    await stopSound();
+  }
+});
+
 // Play sound using offscreen document
 async function playSound(soundType) {
   try {
-    // Create offscreen document for audio playback
-    const existingContexts = await chrome.runtime.getContexts({
-      contextTypes: ['OFFSCREEN_DOCUMENT']
-    });
-
-    if (existingContexts.length === 0) {
-      await chrome.offscreen.createDocument({
-        url: 'offscreen.html',
-        reasons: ['AUDIO_PLAYBACK'],
-        justification: 'Play adzan/beep sound for prayer notification'
-      });
+    if (await hasOffscreenDocument()) {
+      await chrome.runtime.sendMessage({ action: 'playSound', soundType });
+      return;
     }
+
+    await chrome.offscreen.createDocument({
+      url: 'offscreen.html',
+      reasons: ['AUDIO_PLAYBACK'],
+      justification: 'Play adzan/beep sound for prayer notification'
+    });
 
     await chrome.runtime.sendMessage({ action: 'playSound', soundType });
   } catch (error) {
     console.error('Error playing sound:', error);
   }
+}
+
+async function stopSound() {
+  try {
+    if (await hasOffscreenDocument()) {
+      await chrome.runtime.sendMessage({ action: 'stopSound' });
+    }
+  } catch (error) {
+    console.error('Error stopping sound:', error);
+  }
+}
+
+async function hasOffscreenDocument() {
+  const existingContexts = await chrome.runtime.getContexts({
+    contextTypes: ['OFFSCREEN_DOCUMENT']
+  });
+  return existingContexts.length > 0;
 }
 
 // Get user settings
