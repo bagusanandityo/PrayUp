@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "PrayUp",
+  "name": "PrayUp - Never miss a prayer.",
   "version": "1.0.0",
   "description": "Never miss a prayer.",
   "permissions": [
