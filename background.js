@@ -5,8 +5,18 @@ const ALARM_NAME = 'prayerCheck';
 const DAILY_REFRESH_ALARM = 'dailyRefresh';
 
 // Initialize extension
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   console.log('PrayUp installed');
+  
+  // Set default sound to adzan on fresh install or update
+  if (details.reason === 'install' || details.reason === 'update') {
+    const current = await chrome.storage.sync.get(['soundType']);
+    // Only set if not already configured or if it was 'none'
+    if (!current.soundType || current.soundType === 'none') {
+      await chrome.storage.sync.set({ soundType: 'adzan' });
+    }
+  }
+  
   await initializeAlarms();
   await fetchPrayerTimes();
 });
