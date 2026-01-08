@@ -2,6 +2,14 @@
 
 A professional Chrome Extension that displays prayer times and provides automatic notifications based on your location.
 
+🚀 Why PrayUp?
+Unlike simple prayer time widgets, PrayUp is designed to be:
+
+- Lightweight
+- Accurate
+- Offline-ready
+- Fully customizable
+
 ## Features
 
 - ✅ Automatic location detection via Geolocation API
@@ -12,6 +20,14 @@ A professional Chrome Extension that displays prayer times and provides automati
 - ✅ Auto refresh every 12 hours
 - ✅ Next prayer highlight
 - ✅ Fallback to cached data if API fails
+
+## Privacy First
+
+1. Your location is used only to calculate prayer times
+2. No tracking
+3. Click "Load unpacked"
+4. No ads
+5. No data is sent to any third party except the prayer time API
 
 
 ## Installation
