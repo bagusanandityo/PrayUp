@@ -232,6 +232,61 @@ async function loadSettings() {
   document.getElementById('notificationsEnabled').checked = settings.notificationsEnabled;
   document.getElementById('calculationMethod').value = settings.calculationMethod;
   document.getElementById('soundType').value = settings.soundType;
+  
+  // Show custom sound section if custom is selected
+  toggleCustomSoundSection(settings.soundType);
+  
+  // Check if custom sound exists
+  const customSound = await chrome.storage.local.get(['customSoundName']);
+  if (customSound.customSoundName) {
+    document.getElementById('fileName').textContent = customSound.customSoundName;
+  }
+}
+
+function toggleCustomSoundSection(soundType) {
+  const section = document.getElementById('customSoundSection');
+  section.style.display = soundType === 'custom' ? 'block' : 'none';
+}
+
+async function onCustomFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const maxSize = 6 * 1024 * 1024;
+  if (file.size > maxSize) {
+    showStatus('File terlalu besar! Max 6MB', 'error');
+    e.target.value = '';
+    return;
+  }
+  
+  if (!file.type.includes('audio') && !file.name.endsWith('.mp3')) {
+    showStatus('Format tidak valid! Gunakan MP3', 'error');
+    e.target.value = '';
+    return;
+  }
+  
+  try {
+    const base64 = await fileToBase64(file);
+    await chrome.storage.local.set({
+      customSoundData: base64,
+      customSoundName: file.name
+    });
+    
+    document.getElementById('fileName').textContent = file.name;
+    showStatus('File berhasil diupload!', 'success');
+  } catch (error) {
+    showStatus('Gagal upload file', 'error');
+    console.error(error);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 async function saveSettings() {
@@ -275,6 +330,8 @@ function setupEventListeners() {
   document.getElementById('backBtn').addEventListener('click', () => showView('main'));
   document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
   document.getElementById('testNotificationBtn').addEventListener('click', testNotification);
+  document.getElementById('soundType').addEventListener('change', (e) => toggleCustomSoundSection(e.target.value));
+  document.getElementById('customSoundFile').addEventListener('change', onCustomFileSelect);
 }
 
 async function testNotification() {

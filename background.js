@@ -171,8 +171,20 @@ chrome.windows.onRemoved.addListener(() => {
 // Play sound using offscreen document
 async function playSound(soundType) {
   try {
+    let customSoundData = null;
+    
+    // Get custom sound data if needed
+    if (soundType === 'custom') {
+      const stored = await chrome.storage.local.get(['customSoundData']);
+      customSoundData = stored.customSoundData;
+      if (!customSoundData) {
+        console.log('No custom sound data found');
+        return;
+      }
+    }
+    
     if (await hasOffscreenDocument()) {
-      await chrome.runtime.sendMessage({ action: 'playSound', soundType });
+      await chrome.runtime.sendMessage({ action: 'playSound', soundType, customSoundData });
       return;
     }
 
@@ -182,7 +194,7 @@ async function playSound(soundType) {
       justification: 'Play adzan/beep sound for prayer notification'
     });
 
-    await chrome.runtime.sendMessage({ action: 'playSound', soundType });
+    await chrome.runtime.sendMessage({ action: 'playSound', soundType, customSoundData });
   } catch (error) {
     console.error('Error playing sound:', error);
   }

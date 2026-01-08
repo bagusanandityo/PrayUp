@@ -2,15 +2,15 @@
 
 const audioPlayer = document.getElementById("audioPlayer");
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "playSound") {
-    playSound(message.soundType);
+    playSound(message.soundType, message.customSoundData);
   } else if (message.action === "stopSound") {
     stopSound();
   }
 });
 
-function playSound(soundType) {
+function playSound(soundType, customSoundData) {
   let soundFile = "";
 
   switch (soundType) {
@@ -20,6 +20,16 @@ function playSound(soundType) {
     case "adzan":
       soundFile = "assets/adzan.mp3";
       break;
+    case "custom":
+      if (customSoundData) {
+        audioPlayer.src = customSoundData;
+        audioPlayer.volume = 0.7;
+        audioPlayer.play().catch((error) => {
+          console.error("Error playing custom audio:", error);
+        });
+        return;
+      }
+      return;
     default:
       return;
   }

@@ -224,3 +224,52 @@ body {
 .footer p {
   margin-bottom: 4px;
 }
+
+
+/* Custom Sound Upload */
+.custom-sound-section {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.file-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #1a5f4a;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.file-label:hover {
+  background: #2d8a6e;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #666;
+  word-break: break-all;
+}
+
+.hint {
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+}
