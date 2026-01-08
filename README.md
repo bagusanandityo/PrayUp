@@ -1,4 +1,4 @@
-# 🕌 PrayUp - Prayer Times Extension
+# 🕌 PrayUp - Never miss a prayer.
 
 A professional Chrome Extension that displays prayer times and provides automatic notifications based on your location.
 
@@ -8,7 +8,7 @@ A professional Chrome Extension that displays prayer times and provides automati
 - ✅ Prayer times from Aladhan API
 - ✅ Automatic notifications at prayer times
 - ✅ Multiple calculation methods (Kemenag, ISNA, Umm Al-Qura, etc.)
-- ✅ Notification sound options (None, Beep, Adzan)
+- ✅ Notification sound options (None, Adzan, Choose MP3)
 - ✅ Auto refresh every 12 hours
 - ✅ Next prayer highlight
 - ✅ Fallback to cached data if API fails
