@@ -1,26 +1,59 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrayUp - Prayer Time</title>
+  <title>PrayUp</title>
   <link rel="stylesheet" href="notification.css">
 </head>
 <body>
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+  
   <div class="notification-container">
-    <div class="mosque-icon">🕌</div>
-    <h1 class="prayer-name" id="prayerName">Fajr</h1>
-    <p class="prayer-message">It's time for prayer</p>
-    <p class="prayer-dua">May your prayer be accepted</p>
-    <div class="button-group">
+    <div class="header">
+      <span class="logo">🕌</span>
+      <span class="brand">PrayUp</span>
+    </div>
+    
+    <div class="content">
+      <div class="icon-wrapper">
+        <div class="ripple"></div>
+        <div class="ripple delay-1"></div>
+        <div class="ripple delay-2"></div>
+        <span class="main-icon">🕋</span>
+      </div>
+      
+      <h1 class="prayer-name" id="prayerName">Fajr</h1>
+      <p class="message">It's time for prayer</p>
+      <p class="dua">اَللّٰهُمَّ تَقَبَّلْ صَلَاتَنَا</p>
+      <p class="dua-translation">May Allah accept our prayers</p>
+    </div>
+    
+    <div class="actions">
       <button class="btn btn-secondary" id="stopSoundBtn">
-        🔇 Stop Sound
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+        Stop Sound
       </button>
       <button class="btn btn-primary" id="closeBtn">
-        ✓ Close
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        Dismiss
       </button>
     </div>
   </div>
+  
   <script src="notification.js"></script>
 </body>
 </html>

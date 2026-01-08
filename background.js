@@ -75,9 +75,7 @@ async function checkPrayerTime() {
 }
 
 
-// Show overlay notification in active tab
-let notificationWindowId = null;
-
+// Show overlay notification on active tab
 async function showNotification(prayerName, soundType) {
   // Play sound if enabled
   if (soundType && soundType !== 'none') {
@@ -85,46 +83,63 @@ async function showNotification(prayerName, soundType) {
   }
 
   try {
-    // Get active tab
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    // Get active tab in focused window
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     
-    if (tab && tab.id && !tab.url.startsWith('chrome://')) {
-      // Send message to content script
+    if (tab && tab.id && !tab.url.startsWith('chrome://') && !tab.url.startsWith('edge://') && !tab.url.startsWith('about:')) {
+      // Inject content script if needed
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['content.js']
+        });
+      } catch (e) {
+        // Content script might already be injected
+      }
+      
+      // Send message to show overlay
       await chrome.tabs.sendMessage(tab.id, {
         action: 'showOverlayNotification',
         prayerName: prayerName
       });
+      
+      // Focus the window
+      await chrome.windows.update(tab.windowId, { focused: true });
     } else {
-      // Fallback: open popup window if no valid tab
-      const window = await chrome.windows.create({
-        url: `notification.html?prayer=${encodeURIComponent(prayerName)}`,
-        type: 'popup',
-        width: 380,
-        height: 340,
-        focused: true
-      });
-      notificationWindowId = window.id;
+      // No valid tab, try to find any valid tab
+      const tabs = await chrome.tabs.query({});
+      const validTab = tabs.find(t => 
+        t.url && 
+        !t.url.startsWith('chrome://') && 
+        !t.url.startsWith('edge://') && 
+        !t.url.startsWith('about:')
+      );
+      
+      if (validTab) {
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId: validTab.id },
+            files: ['content.js']
+          });
+        } catch (e) {}
+        
+        await chrome.tabs.sendMessage(validTab.id, {
+          action: 'showOverlayNotification',
+          prayerName: prayerName
+        });
+        
+        await chrome.windows.update(validTab.windowId, { focused: true });
+        await chrome.tabs.update(validTab.id, { active: true });
+      }
     }
   } catch (error) {
     console.error('Error showing notification:', error);
-    // Fallback to popup window
-    const window = await chrome.windows.create({
-      url: `notification.html?prayer=${encodeURIComponent(prayerName)}`,
-      type: 'popup',
-      width: 380,
-      height: 340,
-      focused: true
-    });
-    notificationWindowId = window.id;
   }
 }
 
 // Stop sound when notification window is closed (fallback)
-chrome.windows.onRemoved.addListener((windowId) => {
-  if (windowId === notificationWindowId) {
-    stopSound();
-    notificationWindowId = null;
-  }
+chrome.windows.onRemoved.addListener(() => {
+  stopSound();
 });
 
 // Play sound using offscreen document
