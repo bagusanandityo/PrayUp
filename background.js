@@ -222,7 +222,7 @@ async function getSettings() {
   const defaults = {
     notificationsEnabled: true,
     calculationMethod: 11,
-    soundType: 'none'
+    soundType: 'adzan'
   };
   
   const result = await chrome.storage.sync.get(defaults);
