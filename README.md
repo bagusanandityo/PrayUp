@@ -13,23 +13,6 @@ A professional Chrome Extension that displays prayer times and provides automati
 - ✅ Next prayer highlight
 - ✅ Fallback to cached data if API fails
 
-## File Structure
-
-```
-PrayUp/
-├── manifest.json        # Extension configuration
-├── background.js        # Service worker for alarms & notifications
-├── popup.html          # Main popup UI
-├── popup.css           # Popup styling
-├── popup.js            # Popup logic
-├── options.html        # Settings page
-├── options.css         # Settings styling
-├── options.js          # Settings logic
-├── offscreen.html      # Offscreen document for audio
-├── offscreen.js        # Audio player
-└── assets/
-    └── icon.png        # Extension icon (128x128)
-```
 
 ## Installation
 
@@ -48,11 +31,3 @@ PrayUp/
    - Choose calculation method
    - Choose notification sound
 
-## API Used
-
-- [Aladhan Prayer Times API](https://aladhan.com/prayer-times-api)
-- [BigDataCloud Reverse Geocoding API](https://www.bigdatacloud.com/)
-
-## License
-
-MIT License
