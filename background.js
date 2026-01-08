@@ -317,11 +317,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
-  if (message.action === 'testNotification') {
-    getSettings().then(settings => {
-      showNotification('Test', settings.soundType);
-    });
-    sendResponse({ success: true });
-    return true;
-  }
+  // if (message.action === 'testNotification') {
+  //   getSettings().then(settings => {
+  //     showNotification('Test', settings.soundType);
+  //   });
+  //   sendResponse({ success: true });
+  //   return true;
+  // }
 });
