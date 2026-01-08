@@ -2,12 +2,25 @@
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'showOverlayNotification') {
-    showOverlayNotification(message.prayerName);
+    showOverlayNotification(message.prayerName, message.verse);
     sendResponse({ success: true });
   }
 });
 
-function showOverlayNotification(prayerName) {
+function showOverlayNotification(prayerName, verse = null) {
+  // Default verse if not provided
+  const verseData = verse || {
+    arabic: 'اَللّٰهُمَّ تَقَبَّلْ صَلَاتَنَا',
+    translation: 'May Allah accept our prayers',
+    surah: ''
+  };
+  
+  // Truncate translation if too long
+  let translation = verseData.translation;
+  // if (translation.length > 100) {
+  //   translation = translation.substring(0, 100) + '...';
+  // }
+
   // Remove existing notification if any
   const existing = document.getElementById('prayup-overlay');
   if (existing) existing.remove();
@@ -44,8 +57,8 @@ function showOverlayNotification(prayerName) {
         
         <h1 class="prayup-title">${prayerName}</h1>
         <p class="prayup-subtitle">It's time for prayer</p>
-        <p class="prayup-dua">اَللّٰهُمَّ تَقَبَّلْ صَلَاتَنَا</p>
-        <p class="prayup-dua-trans">May Allah accept our prayers</p>
+        <p class="prayup-dua-trans">${translation}</p>
+        ${verseData.surah ? `<p class="prayup-surah">— ${verseData.surah}</p>` : ''}
       </div>
       
       <div class="prayup-actions">
@@ -253,19 +266,29 @@ function showOverlayNotification(prayerName) {
     }
     
     .prayup-dua {
-      font-size: 18px;
+      font-size: 16px;
       color: #d4af37;
-      margin: 0 0 4px;
+      margin: 0 0 6px;
       font-weight: 600;
       direction: rtl;
       text-shadow: 0 2px 6px rgba(212, 175, 55, 0.25);
+      line-height: 1.6;
+      max-height: 60px;
+      overflow: hidden;
     }
     
     .prayup-dua-trans {
       font-size: 11px;
-      color: rgba(255,255,255,0.45);
-      margin: 0;
+      color: rgba(255,255,255,0.6);
+      margin: 0 0 4px;
       font-style: italic;
+      line-height: 1.4;
+    }
+    
+    .prayup-surah {
+      font-size: 10px;
+      color: rgba(212, 175, 55, 0.7);
+      margin: 0;
     }
     
     .prayup-actions {

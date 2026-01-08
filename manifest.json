@@ -16,6 +16,7 @@
   "host_permissions": [
     "https://api.aladhan.com/*",
     "https://api.bigdatacloud.net/*",
+    "https://api.alquran.cloud/*",
     "<all_urls>"
   ],
   "content_scripts": [

@@ -82,6 +82,30 @@ async function showNotification(prayerName, soundType) {
     playSound(soundType);
   }
 
+  // Fetch random Quran verse
+  let verse = {
+    arabic: 'اَللّٰهُمَّ تَقَبَّلْ صَلَاتَنَا',
+    translation: 'May Allah accept our prayers',
+    surah: ''
+  };
+  
+  try {
+    const randomAyah = Math.floor(Math.random() * 6236) + 1; // Total ayat dalam Quran
+    const response = await fetch(`https://api.alquran.cloud/v1/ayah/${randomAyah}/editions/quran-uthmani,en.sahih`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.length >= 2) {
+        verse = {
+          // arabic: data.data[0].text,
+          translation: data.data[1].text,
+          surah: `${data.data[0].surah.englishName} ${data.data[0].surah.number}:${data.data[0].numberInSurah}`
+        };
+      }
+    }
+  } catch (e) {
+    console.log('Could not fetch Quran verse:', e);
+  }
+
   try {
     // Get active tab in focused window
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
@@ -100,7 +124,8 @@ async function showNotification(prayerName, soundType) {
       // Send message to show overlay
       await chrome.tabs.sendMessage(tab.id, {
         action: 'showOverlayNotification',
-        prayerName: prayerName
+        prayerName: prayerName,
+        verse: verse
       });
       
       // Focus the window
@@ -125,7 +150,8 @@ async function showNotification(prayerName, soundType) {
         
         await chrome.tabs.sendMessage(validTab.id, {
           action: 'showOverlayNotification',
-          prayerName: prayerName
+          prayerName: prayerName,
+          verse: verse
         });
         
         await chrome.windows.update(validTab.windowId, { focused: true });
